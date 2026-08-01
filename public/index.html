@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Word Drill" />
+<title>Word Drill</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Word Drill</h1>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <main id="app">
+    <section id="home" class="screen">
+      <div class="home-card">
+        <p class="due-count" id="dueCount">Loading...</p>
+        <button id="startBtn" class="primary-btn">Start practice</button>
+        <button id="browseBtn" class="secondary-btn">Browse word list</button>
+      </div>
+    </section>
+
+    <section id="teach" class="screen hidden">
+      <div class="card">
+        <div class="word-header">
+          <h2 id="teachWord"></h2>
+          <span id="teachPOS" class="pos"></span>
+        </div>
+        <p class="definition" id="teachDefinition"></p>
+        <div class="block">
+          <h3>Origin</h3>
+          <p id="teachEtymology"></p>
+        </div>
+        <div class="block">
+          <h3>Memory hook</h3>
+          <p id="teachMnemonic"></p>
+        </div>
+        <div class="block">
+          <h3>In a sentence</h3>
+          <p id="teachSentence"></p>
+        </div>
+        <button id="teachNextBtn" class="primary-btn">Got it, quiz me</button>
+      </div>
+    </section>
+
+    <section id="quiz" class="screen hidden">
+      <div class="card">
+        <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
+        <div class="word-header">
+          <span id="quizPOS" class="pos"></span>
+        </div>
+        <p class="prompt" id="quizPrompt"></p>
+
+        <div id="mcqArea" class="answer-area hidden"></div>
+
+        <div id="fillArea" class="answer-area hidden">
+          <input type="text" id="fillInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type the word..." />
+          <button id="fillSubmit" class="primary-btn">Check</button>
+        </div>
+
+        <div id="freeArea" class="answer-area hidden">
+          <textarea id="freeInput" rows="3" placeholder="Explain in your own words..."></textarea>
+          <button id="freeSubmit" class="primary-btn">Check</button>
+          <p class="grading-note">This one's graded by Claude, gets a moment.</p>
+        </div>
+
+        <div id="feedback" class="feedback hidden">
+          <p id="feedbackText"></p>
+          <button id="continueBtn" class="primary-btn">Continue</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="sessionEnd" class="screen hidden">
+      <div class="card">
+        <h2>Session done</h2>
+        <p id="sessionSummary"></p>
+        <button id="backHomeBtn" class="primary-btn">Back home</button>
+      </div>
+    </section>
+
+    <section id="browse" class="screen hidden">
+      <div class="card browse-card">
+        <h2>Word list</h2>
+        <div id="browseList"></div>
+        <button id="browseBackBtn" class="secondary-btn">Back</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

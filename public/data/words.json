@@ -1,0 +1,32 @@
+{
+  "perfidious": {
+    "word": "perfidious",
+    "partOfSpeech": "adjective",
+    "definition": "deceitful and untrustworthy; disloyal",
+    "etymology": "From Latin perfidia, from per- (\"through, away from\") + fides (\"faith\") — literally someone who has gone through or away from good faith.",
+    "mnemonic": "Picture a friend named 'Fido' who PER-manently betrays you: a perfidious dog that fetches your secrets and brings them straight to your rival.",
+    "exampleSentence": "The perfidious courtier smiled at the king while secretly selling battle plans to the enemy.",
+    "fillInSentence": "The _____ courtier smiled at the king while secretly selling battle plans to the enemy.",
+    "meaningQuestion": "What does this sentence suggest about the courtier's true loyalty?",
+    "mcqDistractors": [
+      "cheerful and easygoing",
+      "extremely cautious and slow to act",
+      "openly hostile and confrontational"
+    ]
+  },
+  "ephemeral": {
+    "word": "ephemeral",
+    "partOfSpeech": "adjective",
+    "definition": "lasting for a very short time",
+    "etymology": "From Greek ephemeros, \"lasting only a day\" (epi- \"on\" + hemera \"day\").",
+    "mnemonic": "Think of a mayfly that lives for just one EPH-emeral day before it's gone, like a firework that's beautiful for a second and then vanishes.",
+    "exampleSentence": "The cherry blossoms were ephemeral, blanketing the street in pink for barely a week each spring.",
+    "fillInSentence": "The cherry blossoms were _____, blanketing the street in pink for barely a week each spring.",
+    "meaningQuestion": "What does this sentence tell you about how long the cherry blossoms last?",
+    "mcqDistractors": [
+      "permanent and unchanging",
+      "extremely fragrant",
+      "gradually increasing in size"
+    ]
+  }
+}

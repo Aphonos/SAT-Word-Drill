@@ -1,0 +1,13 @@
+# Sample SAT-style word list, one word per line.
+# Lines starting with # are ignored. Replace this file's contents (or point
+# the generator at your own file) with your real list.
+perfidious
+ephemeral
+laconic
+obsequious
+mitigate
+ubiquitous
+parsimonious
+vindicate
+inexorable
+pragmatic

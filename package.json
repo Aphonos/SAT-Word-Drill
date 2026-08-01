@@ -1,0 +1,16 @@
+{
+  "name": "word-drill",
+  "version": "1.0.0",
+  "description": "Small self-hosted SAT vocabulary drill app with spaced repetition, powered by Claude Haiku for one-time content generation and live answer grading.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "generate": "node scripts/generate-content.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
