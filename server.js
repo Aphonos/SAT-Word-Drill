@@ -57,7 +57,10 @@ app.post('/api/grade', async (req, res) => {
       ],
     });
 
-    const text = msg.content?.[0]?.text?.trim() || '{}';
+    const rawText = msg.content?.[0]?.text?.trim() || '{}';
+    // Haiku sometimes wraps the JSON in a ```json ... ``` fence despite
+    // being told not to. Strip that before parsing.
+    const text = rawText.replace(/^```json\s*/i, '').replace(/```$/, '').trim();
     let parsed;
     try {
       parsed = JSON.parse(text);
