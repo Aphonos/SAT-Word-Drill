@@ -76,27 +76,15 @@
     return a;
   }
 
-  function levenshtein(a, b) {
-    const m = a.length, n = b.length;
-    const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
-    for (let i = 0; i <= m; i++) dp[i][0] = i;
-    for (let j = 0; j <= n; j++) dp[0][j] = j;
-    for (let i = 1; i <= m; i++) {
-      for (let j = 1; j <= n; j++) {
-        dp[i][j] = a[i - 1] === b[j - 1]
-          ? dp[i - 1][j - 1]
-          : 1 + Math.min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]);
-      }
-    }
-    return dp[m][n];
-  }
-
-  function fillAnswerCorrect(word, input) {
-    const a = word.trim().toLowerCase();
-    const b = input.trim().toLowerCase();
-    if (a === b) return true;
-    if (a.length >= 5) return levenshtein(a, b) <= 1; // small typo tolerance
-    return false;
+  // Pick `count` other words to use as wrong options for a fill-in-the-blank
+  // multiple choice question. Prefers same part of speech so the options are
+  // grammatically plausible in the sentence, falls back to any other word if
+  // there aren't enough same-POS candidates. Pure client-side, no API call.
+  function pickDistractorWords(targetWord, pos, count) {
+    const others = Object.keys(WORDS).filter((w) => w !== targetWord);
+    const samePOS = others.filter((w) => WORDS[w].partOfSpeech === pos);
+    const pool = samePOS.length >= count ? samePOS : others;
+    return shuffle(pool).slice(0, count);
   }
 
   // ---- DOM refs ----------------------------------------------------------
@@ -206,26 +194,19 @@
     el('progressFill').style.width = `${Math.round((queueIndex / queue.length) * 100)}%`;
     el('quizPOS').textContent = w.partOfSpeech || '';
     el('feedback').classList.add('hidden');
-    ['mcqArea', 'fillArea', 'freeArea'].forEach((id) => el(id).classList.add('hidden'));
+    ['mcqArea', 'freeArea'].forEach((id) => el(id).classList.add('hidden'));
 
     if (currentQuestionType === 'mcq') {
       el('quizPrompt').textContent = `What does "${w.word}" mean?`;
       const options = shuffle([w.definition, ...(w.mcqDistractors || [])]);
-      const area = el('mcqArea');
-      area.innerHTML = '';
-      options.forEach((opt) => {
-        const btn = document.createElement('button');
-        btn.className = 'mcq-option';
-        btn.textContent = opt;
-        btn.addEventListener('click', () => handleMcqAnswer(word, opt, btn, options));
-        area.appendChild(btn);
-      });
-      area.classList.remove('hidden');
+      renderOptions(options, w.definition, correct =>
+        correct ? 'Correct.' : `Not quite. "${word}" means: ${w.definition}`);
     } else if (currentQuestionType === 'fill') {
       el('quizPrompt').textContent = w.fillInSentence;
-      el('fillInput').value = '';
-      el('fillArea').classList.remove('hidden');
-      el('fillInput').focus();
+      const distractors = pickDistractorWords(word, w.partOfSpeech, 3);
+      const options = shuffle([w.word, ...distractors]);
+      renderOptions(options, w.word, correct =>
+        correct ? 'Correct.' : `The word was "${word}": ${w.definition}`);
     } else {
       el('quizPrompt').textContent = `${w.exampleSentence}\n\n${w.meaningQuestion}`;
       el('freeInput').value = '';
@@ -235,26 +216,32 @@
     showScreen('quiz');
   }
 
-  function handleMcqAnswer(word, chosen, btnEl, allOptions) {
-    if (pendingGrade) return;
-    const w = WORDS[word];
-    const correct = chosen === w.definition;
-    document.querySelectorAll('.mcq-option').forEach((b) => {
-      b.disabled = true;
-      if (b.textContent === w.definition) b.classList.add('correct');
-      else if (b === btnEl) b.classList.add('incorrect');
+  // Renders a set of clickable options into #mcqArea (used for both the
+  // "what does this word mean" and "which word fits the blank" question
+  // types). `correctValue` is matched against option text; `feedbackFor` is
+  // called with (isCorrect) to build the feedback line.
+  function renderOptions(options, correctValue, feedbackFor) {
+    const area = el('mcqArea');
+    area.innerHTML = '';
+    options.forEach((opt) => {
+      const btn = document.createElement('button');
+      btn.className = 'mcq-option';
+      btn.textContent = opt;
+      btn.addEventListener('click', () => {
+        if (pendingGrade) return;
+        const word = queue[queueIndex];
+        const correct = opt === correctValue;
+        document.querySelectorAll('.mcq-option').forEach((b) => {
+          b.disabled = true;
+          if (b.textContent === correctValue) b.classList.add('correct');
+          else if (b === btn) b.classList.add('incorrect');
+        });
+        finishAnswer(word, correct, feedbackFor(correct));
+      });
+      area.appendChild(btn);
     });
-    finishAnswer(word, correct, correct ? 'Correct.' : `Not quite. "${word}" means: ${w.definition}`);
+    area.classList.remove('hidden');
   }
-
-  el('fillSubmit').addEventListener('click', () => {
-    if (pendingGrade) return;
-    const word = queue[queueIndex];
-    const w = WORDS[word];
-    const val = el('fillInput').value;
-    const correct = fillAnswerCorrect(word, val);
-    finishAnswer(word, correct, correct ? 'Correct.' : `The word was "${word}": ${w.definition}`);
-  });
 
   el('freeSubmit').addEventListener('click', async () => {
     if (pendingGrade) return;

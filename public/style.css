@@ -94,7 +94,7 @@ body {
 .mcq-option.correct { border-color: var(--good); background: rgba(62,207,142,0.15); }
 .mcq-option.incorrect { border-color: var(--bad); background: rgba(255,107,107,0.15); }
 
-#fillInput, #freeInput {
+#freeInput {
   width: 100%;
   padding: 12px;
   border-radius: 10px;
